@@ -72,19 +72,27 @@ public class Ahorcado {
                 break;
         }
         
-        if(error != 6){
+        if(error <= 6){
             for(int i=0;i<vPalabra.length;i++){
                 System.out.print(vPalabra[i]); 
             }
-        }else{
-            System.out.println("TE HAS QUEDADO SIN INTENTOS");
         }
     }
     
-    public static int comprobarErrores(String vLetras[],String vPalabra[],String vErrores[],String letra,int error){
+    public static int juego(String vLetras[],String vPalabra[],String vErrores[],String letra,int error){
         
+        Scanner leer = new Scanner(System.in);
         boolean fallo = true;
         int devolver = error;
+        boolean comprueba = buscarErrores(vErrores,letra);
+        
+        if(error < 6){
+            System.out.println("");
+            System.out.println("");
+            System.out.println("Introduzca la letra");
+            letra = leer.nextLine();
+            System.out.println("");
+        }
         
         for(int i=0;i<vLetras.length;i++){
             if(vLetras[i].equals(letra)){
@@ -94,19 +102,40 @@ public class Ahorcado {
         }
         
         if (fallo){
-            for(int i=0;i<vErrores.length;i++){
-                if(vErrores[i] != null)
-                if(vErrores[i].equals(letra)){
-                    
-                }
-            }
             
-            vErrores[error] = letra;
-            devolver++;
+            if(comprueba == true){
+                System.out.println("Palabra repetida");
+                System.out.println("");
+            }else{
+                vErrores[error] = letra;
+                devolver++;
+            }
         }
         
+        System.out.println("Errores:");
+        
+        for(int i=0;i<vErrores.length;i++){
+            if(vErrores[i] != null){
+                System.out.print(vErrores[i] + ",");
+            }
+        }
         
         return devolver;
+    }
+    
+    public static boolean buscarErrores(String vErrores[],String letra){
+        
+        boolean comprueba = false;
+        
+        for(int i=0;i<vErrores.length;i++){
+            if(vErrores[i] != null)
+            if(vErrores[i].equals(letra)){
+                comprueba = true;
+                i = vErrores.length + 1;
+            }
+        }
+        
+        return comprueba;
     }
     
     public static void separarPalabra(String vLetras[],String palabra){
@@ -126,6 +155,7 @@ public class Ahorcado {
         String palabra = "";
         String letra = "";
         int error = 0;
+        int acierto = 0;
         boolean averiguada = false; 
         
         System.out.println("Escriba la palabra que desee averiguar:");
@@ -139,17 +169,34 @@ public class Ahorcado {
         separarPalabra(vLetras,palabra);
         
         do{
+            System.out.println("");
             dibujar(vPalabra,error);
             
-            System.out.println("");
-            System.out.println("");
-            System.out.println("Introduzca la letra");
-            letra = leer.nextLine();
-            
-            
-            
-        }while(error != 6 || averiguada == true);
-        
+            if(error == 6){
+                System.out.println("");
+                System.out.println("");
+                System.out.println("NO TE QUEDAN INTENTOS");
+                averiguada = true;
+                
+            }else{
+                
+                error = juego(vLetras,vPalabra,vErrores,letra,error);
+                
+                if(acierto == vPalabra.length){
+                    System.out.println("");
+                    System.out.println("!HAS GANADO¡");
+                    averiguada = true; 
+                }else{
+                    for(int i=0;i<vPalabra.length;i++){
+                        if(vPalabra[i].equals(vLetras[i])){
+                            acierto++;
+                            i = vPalabra.length + 1;
+                        }
+                    }  
+                }
+            }    
+        }while(averiguada != true);
     }
-    
 }
+    
+
