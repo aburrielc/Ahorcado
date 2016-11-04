@@ -84,7 +84,7 @@ public class Ahorcado {
         Scanner leer = new Scanner(System.in);
         boolean fallo = true;
         int devolver = error;
-        boolean comprueba = buscarErrores(vErrores,letra);
+        boolean comprueba = false;
         
         if(error < 6){
             System.out.println("");
@@ -92,6 +92,8 @@ public class Ahorcado {
             System.out.println("Introduzca la letra");
             letra = leer.nextLine();
             System.out.println("");
+            
+            comprueba = buscarErrores(vErrores,letra);
         }
         
         for(int i=0;i<vLetras.length;i++){
@@ -182,17 +184,17 @@ public class Ahorcado {
                 
                 error = juego(vLetras,vPalabra,vErrores,letra,error);
                 
+                acierto=0;
+                for(int i=0;i<vPalabra.length;i++){
+                    if(vPalabra[i].equalsIgnoreCase(vLetras[i])){
+                        acierto++;
+                    }
+                }
+                
                 if(acierto == vPalabra.length){
                     System.out.println("");
                     System.out.println("!HAS GANADO¡");
                     averiguada = true; 
-                }else{
-                    for(int i=0;i<vPalabra.length;i++){
-                        if(vPalabra[i].equals(vLetras[i])){
-                            acierto++;
-                            i = vPalabra.length + 1;
-                        }
-                    }  
                 }
             }    
         }while(averiguada != true);
