@@ -1,11 +1,15 @@
 package ahorcado;
 
+import java.util.Random;
 import java.util.Scanner;
+
 
 public class Ahorcado {
     
-    public static void dibujar(String vPalabra[],int error){
+    //Muestra el dibujo,los errores y las letras acertadas de la palabra a averiguar.
+    public static void dibujar(String vPalabra[],String vErrores[],int error){
         
+        //Dibuja en función del número de errores cometidos.
         switch(error){
             case 0:
                 System.out.println("__________");
@@ -72,30 +76,51 @@ public class Ahorcado {
                 break;
         }
         
+        //Condición: para poder ver los aciertos que he hecho durante la partida.
+        //Incluso aunque no tenga más intentos.
         if(error <= 6){
             for(int i=0;i<vPalabra.length;i++){
-                System.out.print(vPalabra[i]); 
+                System.out.print(vPalabra[i].toUpperCase()); 
+            }
+        }
+        
+        System.out.println("");
+        System.out.println("");
+        System.out.println("Errores:");
+        
+        //Muestra todos los errores cometidos hasta el momento.
+        for(int i=0;i<vErrores.length;i++){
+            if(vErrores[i] != null){
+                System.out.print(vErrores[i] + ",");
             }
         }
     }
     
+    //Contiene toda la mecánica del juego.
+    //Devuelve el número de errores que ha cometido el usuario.
     public static int juego(String vLetras[],String vPalabra[],String vErrores[],String letra,int error){
         
         Scanner leer = new Scanner(System.in);
         boolean fallo = true;
+        
+        //Para trabajar con el número de errores.
         int devolver = error;
+        
         boolean comprueba = false;
         
+        //Pide letra mientras el usuario no haya llegado al número tope de intentos.
+        //En este caso, puede cometer hasta 6 errores (de 0 a 5).
         if(error < 6){
             System.out.println("");
             System.out.println("");
             System.out.println("Introduzca la letra");
-            letra = leer.nextLine();
+            letra = leer.nextLine().substring(0,1).toLowerCase();
             System.out.println("");
             
             comprueba = buscarErrores(vErrores,letra);
         }
         
+        //Si la letra introducida coincide con la palabra a averiguar, la guarda en aciertos.
         for(int i=0;i<vLetras.length;i++){
             if(vLetras[i].equals(letra)){
                 vPalabra[i] = letra;
@@ -103,8 +128,11 @@ public class Ahorcado {
             }
         }
         
+        //Si el usuario falla la letra
         if (fallo){
             
+            //Comprueba si el fallo está repetido o no.
+            //En caso de que no este repetida, la guardará en el número correspondiente al error y sumará +1 al número total de errores.
             if(comprueba == true){
                 System.out.println("Palabra repetida");
                 System.out.println("");
@@ -114,17 +142,10 @@ public class Ahorcado {
             }
         }
         
-        System.out.println("Errores:");
-        
-        for(int i=0;i<vErrores.length;i++){
-            if(vErrores[i] != null){
-                System.out.print(vErrores[i] + ",");
-            }
-        }
-        
         return devolver;
     }
     
+    //Comprueba si el usuario a repetido una de las letras fallidas.
     public static boolean buscarErrores(String vErrores[],String letra){
         
         boolean comprueba = false;
@@ -142,7 +163,7 @@ public class Ahorcado {
     
     public static void separarPalabra(String vLetras[],String palabra){
         for(int i=0;i<vLetras.length;i++){
-            vLetras[i] = palabra.substring(i,i+1);
+            vLetras[i] = palabra.substring(i,i+1).toLowerCase();
         }
     }
 
@@ -150,6 +171,28 @@ public class Ahorcado {
         for(int i=0;i<vPalabra.length;i++){
             vPalabra[i] = " _ ";
         }
+    }
+    
+    public static String iniciarPalabra(String diezPalabras[]){
+        Random aleatorio = new Random();
+        int numero = aleatorio.nextInt(10);
+        
+        String palabra = "";
+        
+        diezPalabras[0] = "ISOSCELES";
+        diezPalabras[1] = "HIPOTENUSA";
+        diezPalabras[2] = "HIPOPOTAMO";
+        diezPalabras[3] = "MURCIELAGO";
+        diezPalabras[4] = "ORNITORRINCO";
+        diezPalabras[5] = "VIDEOJUEGO";
+        diezPalabras[6] = "JOYSTICK";
+        diezPalabras[7] = "PICAPORTE";
+        diezPalabras[8] = "SOL";
+        diezPalabras[9] = "LUNA";
+        
+        palabra = diezPalabras[numero];
+        
+        return palabra;
     }
     
     public static void main(String[] args) {
@@ -160,8 +203,10 @@ public class Ahorcado {
         int acierto = 0;
         boolean averiguada = false; 
         
-        System.out.println("Escriba la palabra que desee averiguar:");
-        palabra = leer.nextLine();
+        String diezPalabras[] = new String[10];
+        
+        //System.out.println("Escriba la palabra que desee averiguar:");
+        palabra = iniciarPalabra(diezPalabras);
         
         String vLetras[] = new String[palabra.length()];
         String vPalabra[] = new String[palabra.length()];
@@ -172,7 +217,7 @@ public class Ahorcado {
         
         do{
             System.out.println("");
-            dibujar(vPalabra,error);
+            dibujar(vPalabra,vErrores,error);
             
             if(error == 6){
                 System.out.println("");
@@ -192,6 +237,9 @@ public class Ahorcado {
                 }
                 
                 if(acierto == vPalabra.length){
+                    System.out.println("");
+                    dibujar(vPalabra,vErrores,error);
+                    System.out.println("");
                     System.out.println("");
                     System.out.println("!HAS GANADO¡");
                     averiguada = true; 
