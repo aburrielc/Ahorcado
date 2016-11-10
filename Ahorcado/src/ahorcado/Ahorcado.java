@@ -161,18 +161,22 @@ public class Ahorcado {
         return comprueba;
     }
     
+    //Trozea la palabra a averiguar y la guarda en un vector.
     public static void separarPalabra(String vLetras[],String palabra){
         for(int i=0;i<vLetras.length;i++){
             vLetras[i] = palabra.substring(i,i+1).toLowerCase();
         }
     }
-
+    
+    //Inicializa el vector que contendrá los aciertos del usuario.
+    //Así sabremos que su contenido será distinto de null.
     public static void inicializarVPalabra(String vPalabra[]){
         for(int i=0;i<vPalabra.length;i++){
             vPalabra[i] = " _ ";
         }
     }
     
+    //Selecciona una de las palabras escogidas para averiguar de forma aleatoria.
     public static String iniciarPalabra(String diezPalabras[]){
         Random aleatorio = new Random();
         int numero = aleatorio.nextInt(10);
@@ -205,7 +209,6 @@ public class Ahorcado {
         
         String diezPalabras[] = new String[10];
         
-        //System.out.println("Escriba la palabra que desee averiguar:");
         palabra = iniciarPalabra(diezPalabras);
         
         String vLetras[] = new String[palabra.length()];
@@ -219,6 +222,8 @@ public class Ahorcado {
             System.out.println("");
             dibujar(vPalabra,vErrores,error);
             
+            //Si el usuario comete 6 fallos, se le avisa y se cierra el programa.
+            //Sino, se realizará la mecánica del juego.
             if(error == 6){
                 System.out.println("");
                 System.out.println("");
@@ -229,6 +234,9 @@ public class Ahorcado {
                 
                 error = juego(vLetras,vPalabra,vErrores,letra,error);
                 
+                //Igualo acierto a 0 en todo momento, puesto que, solo la utilizo como "bandera".
+                //En cuanto acierto coincida con la longitud del vector, querra decir que el usuario ha averiguado la palabra.
+                //Por lo tanto, finalizará el programa.
                 acierto=0;
                 for(int i=0;i<vPalabra.length;i++){
                     if(vPalabra[i].equalsIgnoreCase(vLetras[i])){
